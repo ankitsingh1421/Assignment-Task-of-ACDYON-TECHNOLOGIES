@@ -71,7 +71,7 @@ export function createRemoteOkSource(fetchImpl: typeof fetch = fetch): JobSource
               headers: {
                 // Honest identification, per RemoteOK's own API guidance.
                 "User-Agent":
-                  "AcdyonJobIngestion/1.0 (+https://github.com/acdyon/job-ingestion; contact: engineering@acdyon.example)",
+                  "AcdyonJobIngestion/1.0 (+https://github.com/ankitsingh1421/Assignment-Task-of-ACDYON-TECHNOLOGIES)",
                 Accept: "application/json",
               },
             });

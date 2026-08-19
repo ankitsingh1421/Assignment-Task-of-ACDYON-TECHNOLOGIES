@@ -8,6 +8,10 @@ See **[DESIGN.md](./DESIGN.md)** for the design writeup (detection surface, inge
 resilience, and where the ethical/technical line is) and **[DECISIONS.md](./DECISIONS.md)** for
 the required 1-page decisions summary.
 
+**Live demo:** https://assignment-task-of-acdyon-technologies-production.up.railway.app/
+
+**Repository:** https://github.com/ankitsingh1421/Assignment-Task-of-ACDYON-TECHNOLOGIES
+
 ## Architecture at a glance
 
 ```

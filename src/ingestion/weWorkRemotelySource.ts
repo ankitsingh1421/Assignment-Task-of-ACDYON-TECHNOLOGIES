@@ -37,7 +37,7 @@ export function createWeWorkRemotelySource(fetchImpl: typeof fetch = fetch): Job
             const response = await fetchImpl(RSS_ENDPOINT, {
               headers: {
                 "User-Agent":
-                  "AcdyonJobIngestion/1.0 (+https://github.com/acdyon/job-ingestion; contact: engineering@acdyon.example)",
+                  "AcdyonJobIngestion/1.0 (+https://github.com/ankitsingh1421/Assignment-Task-of-ACDYON-TECHNOLOGIES)",
                 Accept: "application/rss+xml, application/xml, text/xml",
               },
             });
