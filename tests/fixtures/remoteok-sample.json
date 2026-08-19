@@ -1,0 +1,27 @@
+[
+  { "legal": "Notice: by using our API you agree to our terms https://remoteok.com/terms", "api": "https://remoteok.com/api" },
+  {
+    "id": "1234567",
+    "slug": "senior-frontend-engineer",
+    "company": "Acme Robotics",
+    "position": "Senior Frontend Engineer",
+    "tags": ["react", "typescript", "remote"],
+    "date": "2026-08-10T09:00:00+00:00",
+    "url": "https://remoteok.com/remote-jobs/1234567",
+    "location": "Worldwide",
+    "salary_min": 120000,
+    "salary_max": 160000
+  },
+  {
+    "id": "1234568",
+    "slug": "backend-engineer",
+    "company": "DataForge",
+    "position": "Backend Engineer",
+    "tags": ["node", "postgres"],
+    "date": "2026-08-11T09:00:00+00:00",
+    "url": "https://remoteok.com/remote-jobs/1234568",
+    "location": "",
+    "salary_min": 110000,
+    "salary_max": 145000
+  }
+]

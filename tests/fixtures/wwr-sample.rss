@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>We Work Remotely</title>
+    <item>
+      <title>Globex Inc: Product Designer</title>
+      <link>https://weworkremotely.com/remote-jobs/globex-product-designer</link>
+      <guid>https://weworkremotely.com/remote-jobs/globex-product-designer</guid>
+      <pubDate>Mon, 11 Aug 2026 10:00:00 +0000</pubDate>
+      <category>design</category>
+    </item>
+    <item>
+      <title>Initech: Platform Engineer</title>
+      <link>https://weworkremotely.com/remote-jobs/initech-platform-engineer</link>
+      <guid>https://weworkremotely.com/remote-jobs/initech-platform-engineer</guid>
+      <pubDate>Mon, 11 Aug 2026 11:00:00 +0000</pubDate>
+      <category>devops</category>
+    </item>
+  </channel>
+</rss>

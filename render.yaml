@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: acdyon-job-ingestion
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: POLL_INTERVAL_MS
+        value: "300000"
+      - key: DATA_FILE
+        value: "./data/jobs.json"
