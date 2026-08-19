@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Acdyon job ingestion pipeline demo" />
+    <title>Job Ingestion Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Job ingestion demo home">
+          <span class="brand-mark">AI</span>
+          <span>acdyon <em>/</em> ingest</span>
+        </a>
+        <span class="part-label">PART 1 DEMO</span>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Public source pipeline</p>
+          <h1 id="page-title">Jobs, fetched<br /><span>with receipts.</span></h1>
+          <p class="lede">A small, observable view into the resilient ingestion service. Pull public listings, inspect source health, and see the normalized records it stores.</p>
+        </div>
+        <div class="action-panel">
+          <span class="action-kicker">Manual run</span>
+          <button id="fetch-button" type="button">
+            <span class="button-icon" aria-hidden="true">&#8635;</span>
+            <span>Fetch jobs now</span>
+          </button>
+          <p id="run-message" class="run-message" role="status">Ready to check the pipeline.</p>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Pipeline summary">
+        <article class="summary-cell">
+          <span class="summary-label">Stored listings</span>
+          <strong id="job-count">--</strong>
+          <span class="summary-note">normalized records</span>
+        </article>
+        <article class="summary-cell">
+          <span class="summary-label">Active source</span>
+          <strong id="active-source">--</strong>
+          <span id="last-fetched" class="summary-note">Waiting for a run</span>
+        </article>
+        <article class="summary-cell">
+          <span class="summary-label">Pipeline state</span>
+          <strong id="pipeline-state" class="state-value">Checking</strong>
+          <span class="summary-note">scheduler + failover</span>
+        </article>
+      </section>
+
+      <section class="source-section" aria-labelledby="sources-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Observability</p>
+            <h2 id="sources-title">Source health</h2>
+          </div>
+          <span id="health-time" class="muted">--</span>
+        </div>
+        <div id="source-list" class="source-list" aria-live="polite"></div>
+        <div id="run-log" class="run-log" aria-live="polite"></div>
+      </section>
+
+      <section class="jobs-section" aria-labelledby="jobs-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Normalized output</p>
+            <h2 id="jobs-title">Latest listings</h2>
+          </div>
+          <span class="muted">RemoteOK + We Work Remotely</span>
+        </div>
+        <div class="jobs-controls" aria-label="Listing filters">
+          <label class="control-label" for="source-filter">Source
+            <select id="source-filter">
+              <option value="">All sources</option>
+              <option value="remoteok">RemoteOK</option>
+              <option value="weworkremotely">We Work Remotely</option>
+            </select>
+          </label>
+          <label class="control-label" for="limit-filter">Show
+            <select id="limit-filter">
+              <option value="12">12 jobs</option>
+              <option value="24" selected>24 jobs</option>
+              <option value="50">50 jobs</option>
+              <option value="100">100 jobs</option>
+            </select>
+          </label>
+          <button id="refresh-button" class="secondary-button" type="button" title="Refresh jobs and health">
+            <span aria-hidden="true">&#8635;</span> Refresh view
+          </button>
+        </div>
+        <div id="jobs-list" class="jobs-list" aria-live="polite">
+          <div class="loading">Loading stored listings<span class="loading-dots">...</span></div>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

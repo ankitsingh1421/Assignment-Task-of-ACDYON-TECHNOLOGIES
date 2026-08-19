@@ -29,7 +29,7 @@ export type NormalizedJob = z.infer<typeof NormalizedJobSchema>;
  * (see resilience/pipeline.ts).
  */
 export type IngestionOutcome =
-  | { status: "ok"; jobs: NormalizedJob[] }
+  | { status: "ok"; jobs: NormalizedJob[]; warning?: string }
   | { status: "empty" } // source reachable, zero listings parsed
   | { status: "schema_drift"; sample: unknown; error: string }
   | { status: "network_error"; error: string }

@@ -130,7 +130,11 @@ export function createRemoteOkSource(fetchImpl: typeof fetch = fetch): JobSource
           return { status: "schema_drift", sample: driftSample, error: driftError };
         }
 
-        return { status: "ok", jobs };
+        return {
+          status: "ok",
+          jobs,
+          warning: driftSample ? `Skipped malformed record: ${driftError}` : undefined,
+        };
       } catch (err) {
         if (err instanceof RetryExhaustedError) {
           const msg = String(err.lastError);

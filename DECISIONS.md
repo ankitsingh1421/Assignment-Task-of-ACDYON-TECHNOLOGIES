@@ -35,7 +35,7 @@ the `JobSource` abstraction holds up against something less cooperative than RSS
 
 I used Claude to scaffold this project end-to-end — the adapter interface, retry/circuit-breaker
 utilities, pipeline orchestration, and test suite. What I verified personally: I ran the full test
-suite (20 tests covering retry/backoff, breaker open/close/cooldown transitions, primary→fallback
+suite (24 tests covering retry/backoff, breaker open/close/cooldown transitions, primary→fallback
 failover, schema-drift vs. block-vs-empty classification, and dedup) and read every test to confirm
 it actually exercises the behavior it claims to, not just that it passes. I also ran the built
 server locally and confirmed `/health` correctly reports a blocked/degraded state rather than

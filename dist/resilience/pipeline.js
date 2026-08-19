@@ -18,6 +18,7 @@ export class IngestionPipeline {
     store;
     breakers = new Map();
     health = new Map();
+    activeRun = null;
     constructor(sources, // priority order: primary first
     store, breakerOpts = { failureThreshold: 3, cooldownMs: 10 * 60 * 1000 }) {
         this.sources = sources;
@@ -32,6 +33,17 @@ export class IngestionPipeline {
     }
     /** Runs one tick: try sources in order until one yields usable jobs. */
     async runOnce() {
+        if (this.activeRun)
+            return this.activeRun;
+        this.activeRun = this.runOnceInternal();
+        try {
+            return await this.activeRun;
+        }
+        finally {
+            this.activeRun = null;
+        }
+    }
+    async runOnceInternal() {
         const log = [];
         for (const source of this.sources) {
             const breaker = this.breakers.get(source.id);
@@ -57,6 +69,7 @@ export class IngestionPipeline {
                     health.consecutiveEmptyRuns = 0;
                     health.lastSuccessAt = entry.timestamp;
                     entry.jobsFound = outcome.jobs.length;
+                    entry.detail = outcome.warning;
                     await this.store.upsertMany(outcome.jobs);
                     health.circuitState = breaker.getState();
                     health.lastRun = entry;

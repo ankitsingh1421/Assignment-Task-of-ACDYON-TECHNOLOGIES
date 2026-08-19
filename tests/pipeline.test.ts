@@ -142,4 +142,20 @@ describe("IngestionPipeline", () => {
     await pipeline.runOnce();
     expect(await store.all()).toHaveLength(2);
   });
+
+  it("shares one in-flight run when callers trigger ingestion concurrently", async () => {
+    let calls = 0;
+    const primary = fakeSource("primary", [{ status: "ok", jobs: [job("1", "primary")] }]);
+    const originalFetch = primary.fetchOnce;
+    primary.fetchOnce = async () => {
+      calls++;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      return originalFetch();
+    };
+    const pipeline = new IngestionPipeline([primary], createInMemoryStore());
+
+    await Promise.all([pipeline.runOnce(), pipeline.runOnce()]);
+
+    expect(calls).toBe(1);
+  });
 });

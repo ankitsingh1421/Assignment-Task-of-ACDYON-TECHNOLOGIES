@@ -24,8 +24,12 @@ src/
     pipeline.ts                 # orchestrator: priority order, failover, health tracking
   storage/
     store.ts                   # JSON-file store with (sourceId, externalId) dedup
-  server.ts                    # Express app: /jobs, /health
-tests/                          # 20 tests, all mocked (no live network needed to verify behavior)
+  server.ts                    # Express app: demo UI, /jobs, /health, /ingest
+public/
+  index.html                   # simple Part 1 operator demo
+  styles.css
+  app.js
+tests/                          # 24 tests, all mocked (no live network needed to verify behavior)
 ```
 
 ## Running locally
@@ -38,10 +42,14 @@ npm start
 npm run dev
 ```
 
+Open http://localhost:3000 to view the simple ingestion demo. The **Fetch jobs now** button
+triggers one immediate pipeline run; the background scheduler continues to poll automatically.
+
 Endpoints:
 - `GET /jobs` — all stored listings (`?source=remoteok`, `?limit=10` supported)
 - `GET /health` — per-source circuit state, last run outcome, consecutive-empty-run streaks
-- `GET /` — endpoint index
+- `POST /ingest` — trigger one immediate ingestion pass (used by the demo button)
+- `GET /` — the demo dashboard
 
 ## Running tests
 
@@ -49,7 +57,7 @@ Endpoints:
 npm test
 ```
 
-20 tests across 4 files, all using mocked `fetch` (no live network dependency, so they're
+24 tests across 4 files, all using mocked `fetch` (no live network dependency, so they're
 deterministic in CI and reviewable without hitting real endpoints):
 - `tests/remoteOkSource.test.ts` — parsing, schema drift, blocked/retry classification
 - `tests/weWorkRemotelySource.test.ts` — RSS parsing, drift, blocked classification

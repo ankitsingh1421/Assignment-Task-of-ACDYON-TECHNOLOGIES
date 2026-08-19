@@ -35,6 +35,7 @@ export interface SourceHealth {
 export class IngestionPipeline {
   private readonly breakers = new Map<string, CircuitBreaker>();
   private readonly health = new Map<string, SourceHealth>();
+  private activeRun: Promise<{ usedSource: string | null; log: SourceRunLog[] }> | null = null;
 
   constructor(
     private readonly sources: JobSource[], // priority order: primary first
@@ -53,6 +54,16 @@ export class IngestionPipeline {
 
   /** Runs one tick: try sources in order until one yields usable jobs. */
   async runOnce(): Promise<{ usedSource: string | null; log: SourceRunLog[] }> {
+    if (this.activeRun) return this.activeRun;
+    this.activeRun = this.runOnceInternal();
+    try {
+      return await this.activeRun;
+    } finally {
+      this.activeRun = null;
+    }
+  }
+
+  private async runOnceInternal(): Promise<{ usedSource: string | null; log: SourceRunLog[] }> {
     const log: SourceRunLog[] = [];
 
     for (const source of this.sources) {
@@ -82,6 +93,7 @@ export class IngestionPipeline {
           health.consecutiveEmptyRuns = 0;
           health.lastSuccessAt = entry.timestamp;
           entry.jobsFound = outcome.jobs.length;
+          entry.detail = outcome.warning;
           await this.store.upsertMany(outcome.jobs);
           health.circuitState = breaker.getState();
           health.lastRun = entry;

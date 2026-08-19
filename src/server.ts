@@ -1,4 +1,6 @@
 import express from "express";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 import { createRemoteOkSource } from "./ingestion/remoteOkSource.js";
 import { createWeWorkRemotelySource } from "./ingestion/weWorkRemotelySource.js";
 import { IngestionPipeline } from "./resilience/pipeline.js";
@@ -29,6 +31,9 @@ const scheduler = new JitteredScheduler(pipeline, {
 });
 
 const app = express();
+const publicDir = resolve(dirname(fileURLToPath(import.meta.url)), "../public");
+
+app.use(express.static(publicDir));
 
 app.get("/jobs", async (req, res) => {
   const source = typeof req.query.source === "string" ? req.query.source : undefined;
@@ -46,10 +51,21 @@ app.get("/health", (_req, res) => {
   });
 });
 
+app.post("/ingest", async (_req, res) => {
+  try {
+    const result = await pipeline.runOnce();
+    lastRunLog = result.log;
+    lastUsedSource = result.usedSource;
+    res.json({ ok: result.usedSource !== null, ...result });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error instanceof Error ? error.message : "Ingestion failed" });
+  }
+});
+
 app.get("/", (_req, res) => {
   res.json({
     service: "acdyon-job-ingestion",
-    endpoints: ["/jobs", "/jobs?source=remoteok", "/jobs?limit=10", "/health"],
+    endpoints: ["/jobs", "/jobs?source=remoteok", "/jobs?limit=10", "/health", "/ingest"],
   });
 });
 

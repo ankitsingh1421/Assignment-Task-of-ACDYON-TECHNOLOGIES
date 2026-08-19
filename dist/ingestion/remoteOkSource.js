@@ -107,7 +107,11 @@ export function createRemoteOkSource(fetchImpl = fetch) {
                 if (jobs.length === 0 && driftSample) {
                     return { status: "schema_drift", sample: driftSample, error: driftError };
                 }
-                return { status: "ok", jobs };
+                return {
+                    status: "ok",
+                    jobs,
+                    warning: driftSample ? `Skipped malformed record: ${driftError}` : undefined,
+                };
             }
             catch (err) {
                 if (err instanceof RetryExhaustedError) {

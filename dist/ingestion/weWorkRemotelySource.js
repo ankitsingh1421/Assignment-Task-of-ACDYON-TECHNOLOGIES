@@ -64,9 +64,14 @@ export function createWeWorkRemotelySource(fetchImpl = fetch) {
                 if (itemList.length === 0)
                     return { status: "empty" };
                 const jobs = [];
+                let invalidItems = 0;
+                let driftError = "";
                 for (const item of itemList) {
-                    if (!item?.title || !item?.link)
+                    if (!item?.title || !item?.link) {
+                        invalidItems++;
+                        driftError = "RSS item is missing title or link";
                         continue;
+                    }
                     const { company, title } = extractCompanyAndTitle(String(item.title));
                     const job = NormalizedJobSchema.safeParse({
                         sourceId: "weworkremotely",
@@ -83,8 +88,17 @@ export function createWeWorkRemotelySource(fetchImpl = fetch) {
                     });
                     if (job.success)
                         jobs.push(job.data);
+                    else {
+                        invalidItems++;
+                        driftError = job.error.message;
+                    }
                 }
-                return jobs.length > 0 ? { status: "ok", jobs } : { status: "empty" };
+                if (jobs.length === 0 && invalidItems > 0) {
+                    return { status: "schema_drift", sample: itemList[0], error: driftError };
+                }
+                return jobs.length > 0
+                    ? { status: "ok", jobs, warning: invalidItems ? `Skipped ${invalidItems} malformed RSS item(s): ${driftError}` : undefined }
+                    : { status: "empty" };
             }
             catch (err) {
                 if (err instanceof RetryExhaustedError) {

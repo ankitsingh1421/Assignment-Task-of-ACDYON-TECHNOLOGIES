@@ -36,4 +36,10 @@ describe("WeWorkRemotely RSS source", () => {
     const outcome = await source.fetchOnce();
     expect(outcome.status).toBe("blocked");
   });
+
+  it("reports schema drift when every RSS item is malformed", async () => {
+    const source = createWeWorkRemotelySource(mockFetch(200, "<rss><channel><item><title>Missing link</title></item></channel></rss>"));
+    const outcome = await source.fetchOnce();
+    expect(outcome.status).toBe("schema_drift");
+  });
 });
