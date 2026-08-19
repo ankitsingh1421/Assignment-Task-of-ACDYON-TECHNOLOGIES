@@ -112,6 +112,24 @@ describe("IngestionPipeline", () => {
     expect(health.consecutiveEmptyRuns).toBe(2);
   });
 
+  it("resets the empty streak when a source returns a failure", async () => {
+    const primary = fakeSource("primary", [
+      { status: "empty" },
+      { status: "blocked" },
+      { status: "empty" },
+    ]);
+    const fallback = fakeSource("fallback", [{ status: "empty" }]);
+    const store = createInMemoryStore();
+    const pipeline = new IngestionPipeline([primary, fallback], store);
+
+    await pipeline.runOnce();
+    await pipeline.runOnce();
+    await pipeline.runOnce();
+
+    const health = pipeline.getHealth().find((h) => h.sourceId === "primary")!;
+    expect(health.consecutiveEmptyRuns).toBe(1);
+  });
+
   it("de-dupes jobs across ticks via upsert", async () => {
     const primary = fakeSource("primary", [
       { status: "ok", jobs: [job("1", "primary")] },

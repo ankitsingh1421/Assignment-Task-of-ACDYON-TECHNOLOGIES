@@ -44,6 +44,12 @@ describe("RemoteOK source", () => {
     expect(outcome.status).toBe("empty");
   });
 
+  it("reports empty when the API returns no records at all", async () => {
+    const source = createRemoteOkSource(mockFetch({ status: 200, body: [] }));
+    const outcome = await source.fetchOnce();
+    expect(outcome.status).toBe("empty");
+  });
+
   it("reports blocked on a 403 after exhausting retries", async () => {
     const source = createRemoteOkSource(mockFetch({ status: 403, body: {} }));
     const outcome = await source.fetchOnce();

@@ -78,6 +78,7 @@ export class IngestionPipeline {
                     // Explicitly NOT a breaker failure -- the source is responding
                     // fine, our parser is what's stale. Flag loudly, don't punish
                     // the source with a cooldown it doesn't deserve.
+                    health.consecutiveEmptyRuns = 0;
                     entry.detail = outcome.error;
                     health.lastRun = entry;
                     log.push(entry);
@@ -85,6 +86,7 @@ export class IngestionPipeline {
                 }
                 case "network_error":
                 case "blocked": {
+                    health.consecutiveEmptyRuns = 0;
                     breaker.onFailure();
                     health.circuitState = breaker.getState();
                     health.lastRun = entry;

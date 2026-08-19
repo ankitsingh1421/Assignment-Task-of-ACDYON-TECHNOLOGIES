@@ -36,7 +36,7 @@ const RemoteOkRawJobSchema = z.object({
 // this is a real, documented quirk of the API and a small example of the
 // kind of "the shape isn't quite what you assumed" problem this pipeline
 // has to shrug off rather than crash on.
-const RemoteOkResponseSchema = z.array(z.unknown()).min(1);
+const RemoteOkResponseSchema = z.array(z.unknown());
 
 function toNormalizedJob(raw: z.infer<typeof RemoteOkRawJobSchema>): NormalizedJob {
   const salary =
